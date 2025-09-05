@@ -3,6 +3,20 @@
 A cross-platform Pokémon app built with **Expo**.  
 Runs on **Android, iOS, and Web** from a single codebase.
 
+## 📸 Screenshots
+
+### Android
+
+![Android Screenshot](./src/assets/images/screenshot/android.jpeg)
+
+### iOS
+
+![iOS Screenshot](./src/assets/images/screenshot/ios.jpeg)
+
+### Web
+
+![Web Screenshot](./src/assets/images/screenshot/web.png)
+
 ## 🚀 Features
 
 - Browse Pokémon list with infinite scroll
