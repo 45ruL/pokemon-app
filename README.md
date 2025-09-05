@@ -5,17 +5,17 @@ Runs on **Android, iOS, and Web** from a single codebase.
 
 ## 📸 Screenshots
 
-### Android
-
-<img src="./assets/screenshots/android.png" alt="Android Screenshot" width="300"/>
-
 ### iOS
 
-<img src="./assets/screenshots/ios.png" alt="iOS Screenshot" width="300"/>
+<img src="./src/assets/images/screenshot/ios.jpeg" alt="iOS Screenshot" width="300"/>
+
+### Android
+
+<img src="./src/assets/images/screenshot/android.jpeg" alt="Android Screenshot" width="300"/>
 
 ### Web
 
-<img src="./assets/screenshots/web.png" alt="Web Screenshot" width="500"/>
+<img src="./src/assets/images/screenshot/web.png" alt="Web Screenshot" width="500"/>
 
 ## 🚀 Features
 
