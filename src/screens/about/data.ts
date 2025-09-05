@@ -11,9 +11,9 @@ Whether you're a seasoned trainer or just starting your journey, PokéApp provid
 export const features = [
   {
     id: "1",
-    title: "PokémonApp Search",
-    description: "Find any Pokémon instantly",
-    icon: "🔍",
+    title: "Pokemon Select",
+    description: "Find and select your favorite Pokémon",
+    icon: "👋",
     color: "#FF6B6B",
   },
   {
@@ -36,5 +36,5 @@ export const developer = {
   name: "Asrul",
   role: "Frontend Developer",
   avatar:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    "https://media.licdn.com/dms/image/v2/D4E03AQEi7Lv8YcHeng/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1667748226040?e=1759968000&v=beta&t=UK9cD9t-ICKLmsxRWgEPoSmjoSR_O6H5OsJm8doPZSI",
 };
