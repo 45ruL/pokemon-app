@@ -7,15 +7,15 @@ Runs on **Android, iOS, and Web** from a single codebase.
 
 ### Android
 
-![Android Screenshot](./src/assets/images/screenshot/android.jpeg)
+<img src="./assets/screenshots/android.png" alt="Android Screenshot" width="300"/>
 
 ### iOS
 
-![iOS Screenshot](./src/assets/images/screenshot/ios.jpeg)
+<img src="./assets/screenshots/ios.png" alt="iOS Screenshot" width="300"/>
 
 ### Web
 
-![Web Screenshot](./src/assets/images/screenshot/web.png)
+<img src="./assets/screenshots/web.png" alt="Web Screenshot" width="500"/>
 
 ## 🚀 Features
 
