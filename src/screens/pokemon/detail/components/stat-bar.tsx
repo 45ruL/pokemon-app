@@ -4,7 +4,7 @@ import { StatBarProps } from "./types";
 export const StatBar: React.FC<StatBarProps> = ({
   label,
   value,
-  maxValue,
+  maxValue = 255,
   color,
 }) => {
   const percentage = (value / maxValue) * 100;

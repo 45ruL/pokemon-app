@@ -1,5 +1,5 @@
 import ErrorPage from "@/src/components/error-page";
-import LoadingPage from "@/src/components/loading-page";
+import { Skeleton } from "@/src/components/skeleton";
 import { STAT_COLORS } from "@/src/constants/stat-color";
 import { TYPE_COLORS } from "@/src/constants/type-color";
 import { usePokemonDetail } from "@/src/hooks/usePokemon";
@@ -24,7 +24,6 @@ const PokemonDetailScreen: React.FC = () => {
   const { name } = useLocalSearchParams<{ name: string }>();
 
   const { data, isLoading, isError, refetch } = usePokemonDetail(name!);
-
   const primaryType = data?.types[0]?.type?.name;
   const headerColor = TYPE_COLORS[primaryType as string] || "#6C5CE7";
 
@@ -59,10 +58,6 @@ const PokemonDetailScreen: React.FC = () => {
     type: primaryType,
   }));
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
   if (isError) {
     return <ErrorPage onRetry={() => refetch()} />;
   }
@@ -80,7 +75,7 @@ const PokemonDetailScreen: React.FC = () => {
         </TouchableOpacity>
 
         <View style={styles.headerContent}>
-          <Text style={styles.pokemonName}>{data?.name}</Text>
+          <Text style={styles.pokemonName}>{name}</Text>
         </View>
       </View>
 
@@ -89,128 +84,137 @@ const PokemonDetailScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.imageSection, { backgroundColor: headerColor }]}>
-          <View style={styles.pokemonImageContainer}>
-            <View style={styles.pokemonImageBackground}>
-              <Image
-                source={{ uri: pokemonImage || "" }}
-                style={styles.pokemonImage}
-              />
-            </View>
+          {isLoading ? (
+            <Skeleton width={200} height={200} borderRadius={100} />
+          ) : (
+            <View style={styles.pokemonImageContainer}>
+              <View style={styles.pokemonImageBackground}>
+                <Image
+                  source={{ uri: pokemonImage || "" }}
+                  style={styles.pokemonImage}
+                />
+              </View>
 
-            <View style={styles.typeBadgeContainer}>
-              <View
-                style={[
-                  styles.typeBadge,
-                  { backgroundColor: TYPE_COLORS[primaryType as string] },
-                ]}
-              >
-                <Text style={styles.typeBadgeIcon}>⚡</Text>
+              <View style={styles.typeBadgeContainer}>
+                <View
+                  style={[
+                    styles.typeBadge,
+                    { backgroundColor: TYPE_COLORS[primaryType as string] },
+                  ]}
+                >
+                  <Text style={styles.typeBadgeIcon}>⚡</Text>
+                </View>
               </View>
             </View>
-          </View>
+          )}
         </View>
 
         <View style={styles.contentContainer}>
-          {/* Type Tag */}
           <View style={styles.typeContainer}>
-            {data?.types?.map((type, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.typeTag,
-                  {
-                    backgroundColor: TYPE_COLORS[type?.type?.name] || "#A8A878",
-                  },
-                ]}
-              >
-                <Text style={styles.typeText}>{type?.type?.name}</Text>
+            {isLoading ? (
+              <Skeleton width={100} height={32} />
+            ) : (
+              data?.types?.map((type, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.typeTag,
+                    {
+                      backgroundColor:
+                        TYPE_COLORS[type?.type?.name] || "#A8A878",
+                    },
+                  ]}
+                >
+                  <Text style={styles.typeText}>{type?.type?.name}</Text>
+                </View>
+              ))
+            )}
+          </View>
+
+          {isLoading ? (
+            <Skeleton width={"100%"} height={64} />
+          ) : (
+            <View style={styles.statsRow}>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{data?.height}</Text>
+                <Text style={styles.statLabel}>Height</Text>
               </View>
-            ))}
-          </View>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{data?.weight}</Text>
+                <Text style={styles.statLabel}>Weight</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{data?.base_experience}</Text>
+                <Text style={styles.statLabel}>Base Exp</Text>
+              </View>
+            </View>
+          )}
 
-          {/* Stats Row */}
-          <View style={styles.statsRow}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{data?.height}</Text>
-              <Text style={styles.statLabel}>Height</Text>
+          {isLoading ? (
+            <View style={{ marginTop: 16 }}>
+              <Skeleton width={"100%"} height={"100%"} />
             </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{data?.weight}</Text>
-              <Text style={styles.statLabel}>Weight</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{data?.base_experience}</Text>
-              <Text style={styles.statLabel}>Base Exp</Text>
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Abilities</Text>
-            {abilities?.map((ability, index) => (
-              <View key={index} style={styles.abilityRow}>
-                <Text style={styles.abilityName}>{ability.name}</Text>
-                {ability.isHidden && (
-                  <View style={styles.hiddenTag}>
-                    <Text style={styles.hiddenText}>Hidden</Text>
+          ) : (
+            <View>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Abilities</Text>
+                {abilities?.map((ability, index) => (
+                  <View key={index} style={styles.abilityRow}>
+                    <Text style={styles.abilityName}>{ability.name}</Text>
+                    {ability.isHidden && (
+                      <View style={styles.hiddenTag}>
+                        <Text style={styles.hiddenText}>Hidden</Text>
+                      </View>
+                    )}
                   </View>
-                )}
+                ))}
               </View>
-            ))}
-          </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Base Stats</Text>
-            <StatBar
-              label="HP"
-              value={stats?.hp}
-              maxValue={100}
-              color={STAT_COLORS.hp}
-            />
-            <StatBar
-              label="Attack"
-              value={stats?.attack}
-              maxValue={100}
-              color={STAT_COLORS.attack}
-            />
-            <StatBar
-              label="Defense"
-              value={stats?.defense}
-              maxValue={100}
-              color={STAT_COLORS.defense}
-            />
-            <StatBar
-              label="Sp. Atk"
-              value={stats?.spAtk}
-              maxValue={100}
-              color={STAT_COLORS.spAtk}
-            />
-            <StatBar
-              label="Sp. Def"
-              value={stats?.spDef}
-              maxValue={100}
-              color={STAT_COLORS.spDef}
-            />
-            <StatBar
-              label="Speed"
-              value={stats?.speed}
-              maxValue={100}
-              color={STAT_COLORS.speed}
-            />
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Base Stats</Text>
+                <StatBar label="HP" value={stats?.hp} color={STAT_COLORS.hp} />
+                <StatBar
+                  label="Attack"
+                  value={stats?.attack}
+                  color={STAT_COLORS.attack}
+                />
+                <StatBar
+                  label="Defense"
+                  value={stats?.defense}
+                  color={STAT_COLORS.defense}
+                />
+                <StatBar
+                  label="Sp. Atk"
+                  value={stats?.spAtk}
+                  color={STAT_COLORS.spAtk}
+                />
+                <StatBar
+                  label="Sp. Def"
+                  value={stats?.spDef}
+                  color={STAT_COLORS.spDef}
+                />
+                <StatBar
+                  label="Speed"
+                  value={stats?.speed}
+                  color={STAT_COLORS.speed}
+                />
 
-            <View style={styles.totalStatRow}>
-              <Text style={styles.totalStatLabel}>Total</Text>
-              <Text style={styles.totalStatValue}>{totalStats ?? 0}</Text>
+                <View style={styles.totalStatRow}>
+                  <Text style={styles.totalStatLabel}>Total</Text>
+                  <Text style={styles.totalStatValue}>{totalStats ?? 0}</Text>
+                </View>
+              </View>
+
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Key Moves</Text>
+                <View style={styles.movesGrid}>
+                  {keyMoves?.map((move, index) => (
+                    <KeyMoveCard key={index} move={move} />
+                  ))}
+                </View>
+              </View>
             </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Key Moves</Text>
-            <View style={styles.movesGrid}>
-              {keyMoves?.map((move, index) => (
-                <KeyMoveCard key={index} move={move} />
-              ))}
-            </View>
-          </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
