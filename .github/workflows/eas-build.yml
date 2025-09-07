@@ -1,34 +1,30 @@
-name: Build with Expo
-
+name: EAS Build
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
   build:
+    name: Install and build
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 24
+          cache: yarn
 
-      - name: Debug Secrets & Env
-        run: |
-          echo "== Debug Secrets & Env =="
-          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
-          echo "NODE VERSION:"
-          node -v
-          echo "NPM VERSION:"
-          npm -v
-          if [ -z "${HEHEHE}" ]; then
-            echo "❌ HEHEHE is NOT set"
-          else
-            echo "✅ HEHEHE is set"
-            echo "HEHEHE starts with: ${HEHEHE:0:4}****"
-          fi
-        env:
-          HEHEHE: ${{ secrets.HEHEHE }}
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build Android on EAS (wait until done)
+        run: eas build --platform android --profile preview --non-interactive
