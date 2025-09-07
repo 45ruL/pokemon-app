@@ -1,4 +1,3 @@
-// src/store/__tests__/favorite-thunks.test.ts
 import NetInfo from "@react-native-community/netinfo";
 import { configureStore } from "@reduxjs/toolkit";
 import favoritesReducer, {
@@ -7,15 +6,12 @@ import favoritesReducer, {
   PendingItem,
 } from "../favorite-slice";
 
-// Mock NetInfo
 jest.mock("@react-native-community/netinfo");
 
 const mockNetInfo = NetInfo as jest.Mocked<typeof NetInfo>;
 
-// Mock the sync API function
 const mockSyncFavoritesAPI = jest.fn();
 
-// Create a test version of the thunks with mocked API
 const createSyncFavorites = (syncAPI = mockSyncFavoritesAPI) => {
   return () => async (dispatch: any, getState: any) => {
     const netState = await NetInfo.fetch();
@@ -65,13 +61,39 @@ describe("Favorites Thunks", () => {
   let store: ReturnType<typeof configureStore>;
 
   const mockPendingItems: PendingItem[] = [
-    { data: { name: "pikachu", url: "url1" }, retries: 0 },
-    { data: { name: "charizard", url: "url2" }, retries: 1 },
-    { data: { name: "bulbasaur", url: "url3" }, retries: 0 },
+    {
+      data: {
+        name: "pikachu",
+        url: "url1",
+        image: "image1",
+        types: ["type1", "type2"],
+        rating: 5,
+      },
+      retries: 0,
+    },
+    {
+      data: {
+        name: "charizard",
+        url: "url2",
+        image: "image2",
+        types: ["type3", "type4"],
+        rating: 4,
+      },
+      retries: 1,
+    },
+    {
+      data: {
+        name: "bulbasaur",
+        url: "url3",
+        image: "image3",
+        types: ["type5", "type6"],
+        rating: 3,
+      },
+      retries: 0,
+    },
   ];
 
   beforeEach(() => {
-    // Create a test store
     store = configureStore({
       reducer: {
         favorites: favoritesReducer,
@@ -114,7 +136,6 @@ describe("Favorites Thunks", () => {
     it("should not sync when pending queue is empty", async () => {
       mockNetInfo.fetch.mockResolvedValue({ isConnected: true } as any);
 
-      // Create store with empty pending queue
       const emptyStore = configureStore({
         reducer: { favorites: favoritesReducer },
         preloadedState: {
@@ -162,11 +183,9 @@ describe("Favorites Thunks", () => {
         };
       };
 
-      // Should have removed synced items from pending queue
       expect(finalState.favorites.pendingQueue).toHaveLength(1);
       expect(finalState.favorites.pendingQueue[0].data.name).toBe("bulbasaur");
 
-      // Should have incremented retry for failed item
       expect(finalState.favorites.pendingQueue[0].retries).toBe(1);
     });
 

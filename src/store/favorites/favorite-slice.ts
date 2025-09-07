@@ -2,7 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type FavoritePokemon = {
   name: string;
-  url?: string;
+  types: string[];
+  image: string;
+  url: string;
+  rating: number | null;
 };
 
 export type PendingItem = {
@@ -37,7 +40,6 @@ const favoritesSlice = createSlice({
       );
     },
     markSynced: (state, action: PayloadAction<FavoritePokemon[]>) => {
-      // Hapus item yang berhasil di-sync dari queue
       state.pendingQueue = state.pendingQueue.filter(
         (p) => !action.payload.some((s) => s.name === p.data.name)
       );

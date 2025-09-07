@@ -1,4 +1,3 @@
-// src/store/__tests__/favorite-slice.test.ts
 import favoritesReducer, {
   addFavorite,
   FavoritePokemon,
@@ -17,16 +16,28 @@ describe("favoritesSlice", () => {
   const mockPokemon1: FavoritePokemon = {
     name: "pikachu",
     url: "https://pokeapi.co/api/v2/pokemon/25/",
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+    rating: 5,
+    types: ["electric"],
   };
 
   const mockPokemon2: FavoritePokemon = {
     name: "charizard",
     url: "https://pokeapi.co/api/v2/pokemon/6/",
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
+    rating: 4,
+    types: ["fire", "flying"],
   };
 
   const mockPokemon3: FavoritePokemon = {
     name: "bulbasaur",
     url: "https://pokeapi.co/api/v2/pokemon/1/",
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+    rating: 3,
+    types: ["grass", "poison"],
   };
 
   describe("addFavorite", () => {
@@ -154,7 +165,13 @@ describe("favoritesSlice", () => {
     });
 
     it("should handle syncing non-existent items", () => {
-      const nonExistentPokemon: FavoritePokemon = { name: "nonexistent" };
+      const nonExistentPokemon: FavoritePokemon = {
+        name: "nonexistent",
+        url: "",
+        image: "",
+        rating: null,
+        types: [],
+      };
       const state = favoritesReducer(
         stateWithPending,
         markSynced([nonExistentPokemon])

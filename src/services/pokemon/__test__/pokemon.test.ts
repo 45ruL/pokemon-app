@@ -25,7 +25,6 @@ describe("Pokemon Service", () => {
     await expect(fetchPokemonList(0)).rejects.toThrow("Network error");
   });
 
-  // --- Tambahan untuk fetchPokemonDetail ---
   it("should call api.get with correct URL for fetchPokemonDetail", async () => {
     const mockData = { name: "Pikachu" };
     (api.get as jest.Mock).mockResolvedValueOnce({ data: mockData });
