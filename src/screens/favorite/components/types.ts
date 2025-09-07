@@ -1,9 +1,12 @@
 export interface IPokemon {
   name: string;
-  url?: string;
+  types: string[];
+  image: string;
+  url: string;
+  rating: number | null;
 }
 
-export interface FavoritePokemonCardProps {
+export interface IFavoritePokemonCardProps {
   pokemon: IPokemon;
   onPress: (pokemon: IPokemon) => void;
   onToggleFavorite: (pokemon: IPokemon, isFavorite: boolean) => void;

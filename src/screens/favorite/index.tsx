@@ -2,15 +2,17 @@ import {
   addFavorite,
   removeFavorite,
 } from "@/src/store/favorites/favorite-slice";
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   FlatList,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +23,13 @@ import { IPokemon } from "./components/types";
 const PokemonFavoritesScreen: React.FC = () => {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
+  const [searchText, setSearchText] = useState<string>("");
+
   const items = useSelector((state: RootState) => state.favorites.items);
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+  };
 
   const handlePokemonPress = (pokemon: IPokemon) => {
     router.push(`/pokemon/${pokemon.name}`);
@@ -32,6 +40,9 @@ const PokemonFavoritesScreen: React.FC = () => {
       ? dispatch(removeFavorite(pokemon.name))
       : dispatch(addFavorite(pokemon));
   };
+  const filteredItems: IPokemon[] = items.filter((item) =>
+    item.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const totalFavorites = items?.length || 0;
 
@@ -50,9 +61,8 @@ const PokemonFavoritesScreen: React.FC = () => {
         <Text style={styles.totalText}>Total: {totalFavorites}</Text>
       </View>
 
-      {/* Search Bar */}
-      {/* <View style={styles.searchContainer}>
-        <Text style={styles.searchIcon}>🔍</Text>
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#999" />
         <TextInput
           style={styles.searchInput}
           placeholder="Search Pokémon..."
@@ -60,13 +70,11 @@ const PokemonFavoritesScreen: React.FC = () => {
           onChangeText={handleSearch}
           placeholderTextColor="#999"
         />
-      </View> */}
-
-      {/* Pokemon List */}
+      </View>
 
       <FlatList
         style={styles.scrollContainer}
-        data={items}
+        data={filteredItems}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => {
           const isFavorite = items.some((p) => p.name === item.name);
@@ -142,6 +150,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
+    marginLeft: 8,
     color: "#343A40",
   },
   scrollContainer: {
