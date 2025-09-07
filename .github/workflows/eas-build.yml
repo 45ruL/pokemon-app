@@ -24,11 +24,11 @@ jobs:
           node -v
           echo "NPM VERSION:"
           npm -v
-          if [ -z "${EXPO_TOKEN}" ]; then
-            echo "❌ EXPO_TOKEN is NOT set"
+          if [ -z "${HEHEHE}" ]; then
+            echo "❌ HEHEHE is NOT set"
           else
-            echo "✅ EXPO_TOKEN is set"
-            echo "EXPO_TOKEN starts with: ${EXPO_TOKEN:0:4}****"
+            echo "✅ HEHEHE is set"
+            echo "HEHEHE starts with: ${HEHEHE:0:4}****"
           fi
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          HEHEHE: ${{ secrets.HEHEHE }}
