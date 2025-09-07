@@ -4,7 +4,6 @@ import { QueryClient } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { Platform } from "react-native";
 
-// wrapper storage aman untuk web & mobile
 const safeStorage = {
   getItem: async (key: string) => {
     if (Platform.OS === "web")
