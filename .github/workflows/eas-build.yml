@@ -26,5 +26,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build Android on EAS (wait until done)
+      - name: Build Mobile (Android)
         run: eas build --platform android --profile preview --non-interactive
+
+      - name: Build Web
+        run: npx expo export --platform web
+
+      - name: Deploy Web
+        run: eas deploy
