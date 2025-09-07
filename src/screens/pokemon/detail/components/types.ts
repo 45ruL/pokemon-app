@@ -9,6 +9,6 @@ export interface KeyMoveCardProps {
 export interface StatBarProps {
   label: string;
   value: number;
-  maxValue: number;
+  maxValue?: number;
   color: string;
 }

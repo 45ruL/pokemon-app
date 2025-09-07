@@ -1,6 +1,7 @@
 import ErrorPage from "@/src/components/error-page";
 import LoadingPage from "@/src/components/loading-page";
-import { usePokemonList } from "@/src/hooks/usePokemon";
+import { usePokemonListWithLazyTypeInfinite } from "@/src/hooks/usePokemon";
+import { AppDispatch, RootState } from "@/src/store";
 import {
   addFavorite,
   removeFavorite,
@@ -18,7 +19,6 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../store";
 import { PokemonCard } from "./components/pokemon-card";
 import { IPokemon } from "./components/types";
 
@@ -27,16 +27,15 @@ const PokemonHomeScreen: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const items = useSelector((state: RootState) => state.favorites.items);
   const {
-    data,
-    isLoading,
-    isError,
-    refetch,
+    pokemons,
+    isListLoading,
     fetchNextPage,
-    hasNextPage,
     isFetchingNextPage,
-  } = usePokemonList();
-
-  const pokemons = data?.pages.flatMap((page) => page.results) ?? [];
+    hasNextPage,
+    isListError,
+    listRefetch,
+    typeAndStatsStatus,
+  } = usePokemonListWithLazyTypeInfinite();
 
   const handlePokemonPress = (pokemon: IPokemon) => {
     router.push(`/pokemon/${pokemon.name}`);
@@ -48,11 +47,11 @@ const PokemonHomeScreen: React.FC = () => {
       : dispatch(addFavorite(pokemon));
   };
 
-  if (isLoading) {
+  if (isListLoading) {
     return <LoadingPage />;
   }
-  if (isError) {
-    return <ErrorPage onRetry={() => refetch()} />;
+  if (isListError) {
+    return <ErrorPage onRetry={() => listRefetch()} />;
   }
 
   return (
@@ -71,16 +70,21 @@ const PokemonHomeScreen: React.FC = () => {
 
       <FlatList
         data={pokemons}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => {
+        keyExtractor={(item, index) => {
+          const id = item.url.split("/").filter(Boolean).pop();
+          return `${id || item.name}-${index}`;
+        }}
+        renderItem={({ item, index }) => {
           const isFavorite = items.some((p) => p.name === item.name);
+          const status = typeAndStatsStatus[index];
           return (
             <PokemonCard
-              key={item.name}
               pokemon={item}
               onPress={handlePokemonPress}
               onToggleFavorite={handleToggleFavorite}
               isFavorite={isFavorite}
+              isLoading={status.isLoading}
+              isError={status.isError}
             />
           );
         }}

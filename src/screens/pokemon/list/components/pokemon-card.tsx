@@ -1,3 +1,5 @@
+import { Skeleton } from "@/src/components/skeleton";
+import { TYPE_COLORS } from "@/src/constants/type-color";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -8,9 +10,9 @@ export const PokemonCard: React.FC<IPokemonCardProps> = ({
   onPress,
   onToggleFavorite,
   isFavorite,
+  isLoading,
+  isError,
 }) => {
-  const id = pokemon.url?.split("/").filter(Boolean).pop();
-  const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
   return (
     <TouchableOpacity
       style={styles.pokemonCard}
@@ -18,9 +20,7 @@ export const PokemonCard: React.FC<IPokemonCardProps> = ({
     >
       <TouchableOpacity
         style={styles.favoriteButton}
-        onPress={() =>
-          onToggleFavorite && onToggleFavorite(pokemon, !!isFavorite)
-        }
+        onPress={() => onToggleFavorite(pokemon, !!isFavorite)}
       >
         <Ionicons
           name="heart"
@@ -30,11 +30,40 @@ export const PokemonCard: React.FC<IPokemonCardProps> = ({
       </TouchableOpacity>
 
       <View style={styles.pokemonImageContainer}>
-        <Image source={{ uri: imageUrl }} style={styles.pokemonImage} />
+        {isLoading || isError ? (
+          isLoading ? (
+            <Skeleton width={80} height={80} />
+          ) : (
+            <Text>image cant load</Text>
+          )
+        ) : (
+          <Image source={{ uri: pokemon.image }} style={styles.pokemonImage} />
+        )}
       </View>
-
       <View style={styles.pokemonInfo}>
         <Text style={styles.pokemonName}>{pokemon.name}</Text>
+        {isLoading || isError ? (
+          isLoading ? (
+            <Skeleton width={60} height={18} />
+          ) : (
+            <Text>type cant load</Text>
+          )
+        ) : (
+          <View style={{ flexDirection: "row", gap: 5 }}>
+            {pokemon.types?.map((type, index) => {
+              const typeColor = TYPE_COLORS[type] || "#A8A878";
+
+              return (
+                <View
+                  key={`${pokemon.name}-${type}-${index}`}
+                  style={[styles.typeTag, { backgroundColor: typeColor }]}
+                >
+                  <Text style={styles.typeText}>{type}</Text>
+                </View>
+              );
+            })}
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -79,5 +108,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#343A40",
     marginBottom: 6,
+  },
+  typeTag: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  typeText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
 });
