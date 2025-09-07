@@ -1,40 +1,34 @@
-name: EAS Build
+name: Build with Expo
+
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
   build:
-    name: Install and build
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: yarn
+          node-version: 18
 
-      - name: Setup Expo and EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      # 🔎 Step tambahan untuk cek secret
-      - name: Check if EXPO_TOKEN exists
+      - name: Debug Secrets & Env
         run: |
-          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+          echo "== Debug Secrets & Env =="
+          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
+          echo "NODE VERSION:"
+          node -v
+          echo "NPM VERSION:"
+          npm -v
+          if [ -z "${EXPO_TOKEN}" ]; then
             echo "❌ EXPO_TOKEN is NOT set"
-            exit 1
           else
             echo "✅ EXPO_TOKEN is set"
+            echo "EXPO_TOKEN starts with: ${EXPO_TOKEN:0:4}****"
           fi
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build Android on EAS (wait until done)
-        run: eas build --platform android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
