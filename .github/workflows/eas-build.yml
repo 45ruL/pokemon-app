@@ -1,4 +1,5 @@
 name: EAS Build
+
 on:
   workflow_dispatch:
   push:
@@ -9,12 +10,18 @@ jobs:
   build:
     name: Install and build
     runs-on: ubuntu-latest
+
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
+      EXPO_PUBLIC_API_IMAGE_URL: ${{ secrets.EXPO_PUBLIC_API_IMAGE_URL }}
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
           cache: yarn
 
       - name: Setup Expo and EAS
@@ -26,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build Mobile (Android)
+      - name: Build Android on EAS (wait until done)
         run: eas build --platform android --profile preview --non-interactive
 
       - name: Build Web
