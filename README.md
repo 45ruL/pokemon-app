@@ -105,11 +105,11 @@ eas build -p ios --profile preview
 Mobile (android) :
 
 ```bash
-https://expo.dev/accounts/assdev15/projects/assdev15-app/builds/f4bef47e-96a2-4102-885d-cb301e2878ec
+https://expo.dev/accounts/assdev15/projects/assdev15-app/builds/ef432eef-18fd-4819-9646-15caf612e0ac
 ```
 
 Web :
 
 ```bash
-https://assdev15-app--j3yk3yv9xm.expo.app
+https://assdev15-app--op8n2hbmxh.expo.app
 ```
